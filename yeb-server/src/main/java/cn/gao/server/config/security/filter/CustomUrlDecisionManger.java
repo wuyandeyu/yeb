@@ -1,4 +1,4 @@
-package cn.gao.server.config.security;
+package cn.gao.server.config.security.filter;
 
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.security.access.AccessDecisionManager;
@@ -23,7 +23,9 @@ public class CustomUrlDecisionManger  implements AccessDecisionManager {
     @Override
     public void decide(Authentication authentication, Object o, Collection<ConfigAttribute> collection) throws AccessDeniedException, InsufficientAuthenticationException {
         for(ConfigAttribute configAttribute : collection){
+            //当前url所需的角色，根据路径去查出来的角色，从CustomFilter过滤器中查询出来的
             String needRole =configAttribute.getAttribute();
+            //判断角色是否是登录即刻访问的的角色，
             if("ROLE_LOGIN".equals(needRole)){
                 if(authentication instanceof AnonymousAuthenticationToken){
                     throw new AccessDeniedException("尚未登录，请先登录");
@@ -31,12 +33,15 @@ public class CustomUrlDecisionManger  implements AccessDecisionManager {
                     return;
                 }
             }
+            //判断用户橘色是否是url所需的角色。此处的角色使用用户登录后存到userdetails中的去角色
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             for(GrantedAuthority authority :authorities){
+                //System.out.println(authority.getAuthority().equals(needRole));
                 if(authority.getAuthority().equals(needRole)){
                     return;
                 }
             }
+
         }
         throw new AccessDeniedException("权限不足，请联系管理员");
     }

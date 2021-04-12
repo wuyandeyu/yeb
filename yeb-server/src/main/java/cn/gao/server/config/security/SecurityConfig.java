@@ -1,6 +1,13 @@
 package cn.gao.server.config.security;
 
+import cn.gao.server.bo.AdminUserDetails;
+import cn.gao.server.config.jwt.JwtAuthencationTokenFilter;
+import cn.gao.server.config.security.handler.RestAuthorizationEntryPoint;
+import cn.gao.server.config.security.handler.RestfulAccessDeniedHandler;
+import cn.gao.server.config.security.filter.CustomFilter;
+import cn.gao.server.config.security.filter.CustomUrlDecisionManger;
 import cn.gao.server.pojo.Admin;
+import cn.gao.server.pojo.Role;
 import cn.gao.server.service.IAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.util.List;
+
 /**
  * Description:
  *
@@ -26,7 +35,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @Created by Administrator
  */
 @Configuration
-public class SecurityConfig  extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private IAdminService adminService;
@@ -95,9 +104,11 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService(){
         return username->{
             Admin admin = adminService.getAdminByUserName(username);
-            if(null!= admin){
-                admin.setRoles(adminService.getRoles(admin.getId()));
-                return new AdminUserDetails(admin) ;
+            if(null!= admin) {
+                List<Role> roles = adminService.getRoles(admin.getId());
+                admin.setRoles(roles);
+
+                return new AdminUserDetails(admin, roles);
             }
             throw  new UsernameNotFoundException("用户名和密码不正确");
         };

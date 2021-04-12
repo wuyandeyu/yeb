@@ -44,28 +44,31 @@
     </sql>
     <select id="getMenusByAdminId" resultMap="Menus">
         SELECT DISTINCT
-        DISTINCT
-            m1.*,
-            m2.id AS id2,
-            m2.url AS url2,
-            m2.path AS path2,
-            m2.component AS component2,
-            m2.`name` AS name2,
-            m2.iconCls AS iconCls2,
-            m2.keepAlive AS keepAlive2,
-            m2.requireAuth AS requireAuth2,
-            m2.parentId AS parentId2,
-            m2.enabled AS enabled2
-        FROM
-            t_menu m1,
-            t_menu m2,
-            t_admin_role ar,
-            t_menu_role mr
-        WHERE
-            m1.id  = m2.parentId
-            AND m2.id = mr.mid #根据查询到的菜单id和菜单表中的id比对
-            AND mr.id = ar.rid #根据查到的用户角色数据中的角色id去菜单角色表里查询每个角色对应菜单id
-            AND ar.adminId =#{id} #根据用户id=1去用户角色表里查出用户id有几个角色数据
+  m1.*,
+	m2.id AS id2,
+	m2.url AS url2,
+	m2.path AS path2,
+	m2.component AS component2,
+	m2.`name` AS name2,
+	m2.iconCls AS iconCls2,
+	m2.keepAlive AS keepAlive2,
+	m2.requireAuth AS requireAuth2,
+	m2.parentId AS parentId2,
+	m2.enabled AS enabled2
+FROM
+  t_menu_role mr,
+	t_admin_role ar,
+	t_menu m1,
+	t_menu m2
+
+WHERE
+	 m1.id=m2.parentId
+AND
+	m2.id =mr.mid
+AND
+	 mr.rid =ar.rid
+AND
+	ar.adminId = #{id}
             AND m2.enabled =TRUE
 
     </select>

@@ -1,6 +1,6 @@
 package cn.gao.server.service.impl;
 
-import cn.gao.server.config.security.AdminUserDetails;
+import cn.gao.server.bo.AdminUserDetails;
 import cn.gao.server.mapper.MenuMapper;
 import cn.gao.server.pojo.Menu;
 import cn.gao.server.service.IMenuService;

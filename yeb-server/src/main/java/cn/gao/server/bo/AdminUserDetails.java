@@ -1,4 +1,4 @@
-package cn.gao.server.config.security;
+package cn.gao.server.bo;
 
 import cn.gao.server.pojo.Admin;
 import cn.gao.server.pojo.Role;
@@ -25,6 +25,7 @@ public class AdminUserDetails  implements UserDetails {
 
     public AdminUserDetails(Admin admin){
         this.admin=admin;
+
     }
 
     public AdminUserDetails(Admin admin,List<Role> rolse){
@@ -36,11 +37,12 @@ public class AdminUserDetails  implements UserDetails {
         return admin.getId();
     }
 
+    /*将登录后的角色名存到 GrantedAuthority中*/
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<SimpleGrantedAuthority>  authorities = rolse
                 .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getId()+":"+role.getName()))
+                .map(role -> new SimpleGrantedAuthority(role.getName()))// .map(role -> new SimpleGrantedAuthority(role.getId(),role.getName()))
                 .collect(Collectors.toList());
         return authorities;
     }

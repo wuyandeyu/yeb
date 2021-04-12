@@ -1,4 +1,4 @@
-package cn.gao.server.config.security;
+package cn.gao.server.config.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

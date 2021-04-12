@@ -1,10 +1,9 @@
 package cn.gao.server.service.impl;
 
-import cn.gao.server.config.security.JwtTokenUtil;
+import cn.gao.server.config.jwt.JwtTokenUtil;
 import cn.gao.server.mapper.AdminMapper;
 import cn.gao.server.mapper.RoleMapper;
 import cn.gao.server.pojo.Admin;
-import cn.gao.server.pojo.Menu;
 import cn.gao.server.pojo.RespBean;
 import cn.gao.server.pojo.Role;
 import cn.gao.server.service.IAdminService;
@@ -69,6 +68,7 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         }
 
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
         String token = jwtTokenUtil.generateToken(userDetails);

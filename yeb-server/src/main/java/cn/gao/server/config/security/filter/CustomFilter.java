@@ -1,4 +1,4 @@
-package cn.gao.server.config.security;
+package cn.gao.server.config.security.filter;
 
 import cn.gao.server.pojo.Menu;
 import cn.gao.server.pojo.Role;
@@ -16,6 +16,8 @@ import java.util.List;
 
 /**
  * Description:
+ * 权限控制
+ * 根据请求url分析出请求所需角色
  *
  * @Date 2021/4/7 20:59
  * @Created by Administrator
@@ -31,6 +33,7 @@ public class CustomFilter implements FilterInvocationSecurityMetadataSource {
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
         String requestUrl = ((FilterInvocation)o).getRequestUrl();
+        //根据请求路径去查询菜单对应的角色，然后把查到的角色放到数组中
         List<Menu> menus = menuService.getMenusWithRole();
         for(Menu menu : menus){
             if(antPathMatcher.match(menu.getUrl(),requestUrl)){

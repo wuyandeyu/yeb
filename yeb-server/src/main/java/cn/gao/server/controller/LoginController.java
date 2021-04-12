@@ -3,6 +3,7 @@ package cn.gao.server.controller;
 import cn.gao.server.dto.AdminLoginParam;
 import cn.gao.server.pojo.Admin;
 import cn.gao.server.pojo.RespBean;
+import cn.gao.server.pojo.Role;
 import cn.gao.server.service.IAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.List;
 
 /**
  * Description:
@@ -32,14 +34,15 @@ public class LoginController {
     }
     @ApiOperation(value = "获取当前用户信息")
     @GetMapping("/admin/info")
-    public Admin getAdminInfo(Principal principal){
-        if(null==principal){
+    public Admin getAdminInfo(Principal principal) {
+        if (null == principal) {
             return null;
         }
         String username = principal.getName();
         Admin admin = adminService.getAdminByUserName(username);
         admin.setPassword(null);
-        admin.setRoles(adminService.getRoles(admin.getId()));
+        List<Role> roles = adminService.getRoles(admin.getId());
+        admin.setRoles(roles);
         return admin;
     }
 
